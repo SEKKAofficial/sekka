@@ -1,8 +1,9 @@
-/* ==============================
-   SEKKA - Service Worker
-================================ */
+/* =================================
+   SEKKA - SERVICE WORKER
+   سِكّة | مشوارك أسهل
+================================= */
 
-const CACHE_NAME = "sekka-v2";
+const CACHE_NAME = "sekka-v3";
 
 const APP_FILES = [
   "./",
@@ -15,63 +16,87 @@ const APP_FILES = [
   "./icons/apple-touch-icon.png"
 ];
 
-// تثبيت وتخزين الملفات الأساسية
+// تثبيت التطبيق وتخزين الملفات الأساسية
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(APP_FILES);
-    })
+    caches.open(CACHE_NAME)
+      .then((cache) => cache.addAll(APP_FILES))
+      .then(() => self.skipWaiting())
   );
-
-  self.skipWaiting();
 });
 
-// تفعيل النسخة الجديدة
+// تفعيل النسخة الجديدة وتنظيف النسخ القديمة
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames
-          .filter((name) => name.startsWith("sekka-") && name !== CACHE_NAME)
-          .map((name) => caches.delete(name))
-      );
-    })
+    caches.keys()
+      .then((cacheNames) => {
+        return Promise.all(
+          cacheNames
+            .filter(
+              (name) =>
+                name.startsWith("sekka-") &&
+                name !== CACHE_NAME
+            )
+            .map((name) => caches.delete(name))
+        );
+      })
+      .then(() => self.clients.claim())
   );
-
-  self.clients.claim();
 });
 
-// التعامل مع طلبات الملفات
+// التعامل مع طلبات الموقع
 self.addEventListener("fetch", (event) => {
-  if (event.request.method !== "GET") return;
+  const request = event.request;
 
-  const requestURL = new URL(event.request.url);
+  if (request.method !== "GET") return;
+
+  const requestURL = new URL(request.url);
 
   if (requestURL.origin !== self.location.origin) return;
 
   event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
+    (async () => {
+      try {
+        const cachedResponse = await caches.match(request);
 
-      return fetch(event.request).then((networkResponse) => {
+        if (cachedResponse) {
+          return cachedResponse;
+        }
+
+        const networkResponse = await fetch(request);
+
         if (
           networkResponse &&
           networkResponse.status === 200 &&
           networkResponse.type === "basic"
         ) {
-          const responseCopy = networkResponse.clone();
+          const cache = await caches.open(CACHE_NAME);
 
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseCopy);
-          });
+          await cache.put(
+            request,
+            networkResponse.clone()
+          );
         }
 
         return networkResponse;
-      });
-    }).catch(() => {
-      return caches.match("./index.html");
-    })
+
+      } catch (error) {
+        if (request.mode === "navigate") {
+          const offlinePage = await caches.match("./index.html");
+
+          if (offlinePage) {
+            return offlinePage;
+          }
+        }
+
+        return new Response("أنت غير متصل بالإنترنت حاليًا.", {
+          status: 503,
+          statusText: "Service Unavailable",
+          headers: {
+            "Content-Type": "text/plain; charset=utf-8"
+          }
+        });
+      }
+    })()
   );
 });
