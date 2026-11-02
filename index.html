@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+
+<html lang="ar" dir="rtl">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta name="theme-color" content="#064B35">
+
+  <meta name="description" content="سِكّة - مشوارك أسهل. قريباً في مركز رشيد والقرى التابعة لها.">
+
+  <title>سِكّة | مشوارك أسهل</title>
+<link rel="manifest" href="./manifest.json">
+
+<meta name="theme-color" content="#064e3b">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+<meta name="apple-mobile-web-app-title" content="سِكّة">
+
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+</head>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js")
+      .catch(error => console.error("SEKKA SW Error:", error));
+  });
+}
+</script>
+<body>
+
+  <!-- شاشة الانتظار الرئيسية -->
+
+  <main class="coming-soon" id="home">
+
+    <!-- خلفية التصميم -->
+
+    <div class="background-glow"></div>
+
+    <!-- الشعار -->
+
+    <header class="header">
+
+      <div class="logo-container">
+
+        <img
+
+          src="ضع-رابط-شعار-سكة-هنا"
+
+          alt="شعار سِكّة"
+
+          class="logo"
+
+        >
+
+        <div class="brand-name">
+
+          <h2>سِكّة</h2>
+
+          <span>SEKKA</span>
+
+        </div>
+
+      </div>
+
+    </header>
+
+    <!-- المحتوى الرئيسي -->
+
+    <section class="hero">
+
+      <div class="location-badge">
+
+        <span class="status-dot"></span>
+
+        قريباً في مركز رشيد والقرى التابعة له
+
+      </div>
+
+      <h1>
+
+        مشوارك الجاي
+
+        <span>هيكون أسهل</span>
+
+      </h1>
+
+      <p class="description">
+
+        تجربة نقل ذكية جديدة بتجمع التوكتوك والتاكسي والعربيات
+
+        في مكان واحد، علشان مشوارك يبقى أسهل وأوضح.
+
+      </p>
+
+      <!-- وسائل النقل -->
+
+      <div class="transport-types">
+
+        <div class="transport-item">
+
+          <span>🛺</span>
+
+          <p>توكتوك</p>
+
+        </div>
+
+        <div class="transport-item">
+
+          <span>🚕</span>
+
+          <p>تاكسي</p>
+
+        </div>
+
+        <div class="transport-item">
+
+          <span>🚗</span>
+
+          <p>عربية</p>
+
+        </div>
+
+      </div>
+
+      <!-- إعلان الانتظار -->
+
+      <div class="launch-card">
+
+        <div class="launch-icon">✦</div>
+
+        <h3>إحنا بنجهّزلك حاجة مختلفة</h3>
+
+        <p>استعد لتجربة جديدة في مشاويرك اليومية.</p>
+
+        <div class="launch-status">
+
+          <span></span>
+
+          انتظروا انطلاق سِكّة قريباً
+
+        </div>
+
+      </div>
+
+      <!-- التثبيت -->
+
+      <div class="install-area">
+
+        <button id="installBtn" class="install-button" type="button">
+
+          تثبيت سِكّة على جهازك
+
+          <span>↓</span>
+
+        </button>
+
+        <p class="install-note">
+
+          ثبّت سِكّة وخلّيك مستعد للإطلاق
+
+        </p>
+
+      </div>
+
+    </section>
+
+    <!-- التذييل -->
+
+    <footer class="footer">
+
+      <p>سِكّة — مشوارك أسهل 💚</p>
+
+      <span>© 2026 SEKKA. جميع الحقوق محفوظة.</span>
+
+    </footer>
+
+  </main>
+
+</body>
+
+</html>
