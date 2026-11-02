@@ -2,15 +2,20 @@
    SEKKA - Service Worker
 ================================ */
 
-const CACHE_NAME = "sekka-v1";
+const CACHE_NAME = "sekka-v2";
 
 const APP_FILES = [
-  "/",
-  "/index.html",
-  "/manifest.json"
+  "./",
+  "./index.html",
+  "./style.css",
+  "./script.js",
+  "./manifest.json",
+  "./icons/icon-192.png",
+  "./icons/icon-512.png",
+  "./icons/apple-touch-icon.png"
 ];
 
-// تثبيت Service Worker وتخزين الملفات الأساسية
+// تثبيت وتخزين الملفات الأساسية
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
@@ -21,13 +26,13 @@ self.addEventListener("install", (event) => {
   self.skipWaiting();
 });
 
-// تفعيل النسخة الجديدة وتنظيف التخزين القديم
+// تفعيل النسخة الجديدة
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames
-          .filter((name) => name !== CACHE_NAME)
+          .filter((name) => name.startsWith("sekka-") && name !== CACHE_NAME)
           .map((name) => caches.delete(name))
       );
     })
@@ -36,7 +41,7 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
-// تحميل الملفات من التخزين أولًا، ثم الشبكة
+// التعامل مع طلبات الملفات
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
 
@@ -66,7 +71,7 @@ self.addEventListener("fetch", (event) => {
         return networkResponse;
       });
     }).catch(() => {
-      return caches.match("/index.html");
+      return caches.match("./index.html");
     })
   );
 });
